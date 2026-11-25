@@ -1,18 +1,20 @@
 # ClassifyMyPlacement
 
-A machine learning system that predicts whether a student is likely to be placed, based on academic performance, technical skills, and internship/project history. Built as a college minor project, covering the full pipeline from raw data to a deployed, usable prediction API with a web interface.
+A machine learning system that predicts whether a student is likely to be placed, based on academic performance, technical skills, and internship/project history. Built as a college minor project, covering the full pipeline from raw data to a deployed, usable web app.
+
+**🔗 Live Demo:** [studentplacementclassifier.streamlit.app](https://studentplacementclassifier-cy8an9kyqxrajebs2hsraa.streamlit.app/)
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Live Demo](#live-demo)
 - [Dataset](#dataset)
 - [Key Findings](#key-findings)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [Setup Instructions](#setup-instructions)
 - [Running the Notebook](#running-the-notebook)
-- [Running the API + Web Interface](#running-the-api--web-interface)
-- [API Reference](#api-reference)
+- [Running the Streamlit App](#running-the-streamlit-app)
 - [Model Performance](#model-performance)
 - [Limitations](#limitations)
 - [Team](#team)
@@ -27,7 +29,15 @@ The project covers:
 - Cost-aware decision threshold tuning (favoring precision over recall, since a false "you'll be placed" prediction is more harmful than a false "you won't be placed" prediction)
 - Hyperparameter tuning with GridSearchCV
 - Investigating and explaining a suspicious perfect accuracy score, rather than accepting it at face value
-- Deploying the final model as a REST API (FastAPI) with a web front end
+- Deploying the final model as an interactive Streamlit web app
+
+## Live Demo
+
+Try the deployed app here: **https://studentplacementclassifier-cy8an9kyqxrajebs2hsraa.streamlit.app/**
+
+Fill in a student's profile (CGPA, coding skills, aptitude score, etc.) and get a live placement prediction along with the model's probability.
+
+> Note: free Streamlit apps go to sleep after a period of inactivity. If you see a "wake up" screen, click the button and wait a few seconds.
 
 ## Dataset
 
@@ -51,8 +61,7 @@ The project covers:
 - **Data & ML:** pandas, numpy, scikit-learn
 - **Experimentation:** Jupyter Notebook
 - **Model persistence:** joblib
-- **API:** FastAPI, Uvicorn
-- **Frontend:** Jinja2-rendered HTML, vanilla JavaScript (fetch API), CSS
+- **Web app & deployment:** Streamlit, Streamlit Community Cloud
 - **Environment:** Python virtual environment (venv)
 
 ## Project Structure
@@ -67,11 +76,9 @@ ClassifyMyPlacement/
 │   ├── chosen_threshold.pkl         # decision threshold (0.7)
 │   ├── feature_cols.pkl             # exact feature order used in training
 │   └── encoders.pkl                 # LabelEncoders for categorical fields
-├── templates/
-│   └── index.html                   # web frontend
 ├── outputs/                         # saved charts from EDA
 ├── ClassifyMyPlacement.ipynb        # full analysis notebook
-├── main.py                          # FastAPI application
+├── app.py                           # Streamlit application
 ├── requirements.txt
 └── README.md
 ```
@@ -106,55 +113,20 @@ ClassifyMyPlacement/
 
 Open `ClassifyMyPlacement.ipynb` in VS Code (with the Jupyter extension) or Jupyter Lab, select the `venv` kernel, and run all cells top to bottom. This reproduces the full pipeline: data cleaning → EDA → model training → threshold tuning → GridSearchCV → deterministic-rule investigation → model saving.
 
-## Running the API + Web Interface
+## Running the Streamlit App
 
 1. Make sure the `models/` folder contains the four `.pkl` files (created by running the notebook's "Save the Final Model" step).
 
-2. Start the server:
+2. Start the app:
    ```
-   uvicorn main:app --reload
-   ```
-
-3. Open in your browser:
-   ```
-   http://127.0.0.1:8000
-   ```
-   This loads the web interface — fill in a student's profile and submit to get a live prediction.
-
-4. Interactive API docs (Swagger UI) are available at:
-   ```
-   http://127.0.0.1:8000/docs
+   streamlit run app.py
    ```
 
-## API Reference
-
-**POST** `/predict`
-
-Request body:
-```json
-{
-  "cgpa": 8.2,
-  "backlogs": 0,
-  "internships": 2,
-  "certifications": 3,
-  "coding_skills": 8,
-  "communication_skills": 7,
-  "aptitude_score": 75,
-  "projects": 4,
-  "gender": "Male",
-  "degree": "BTech",
-  "branch": "CS"
-}
-```
-
-Response:
-```json
-{
-  "prediction": "Placed",
-  "probability": 0.82,
-  "threshold_used": 0.7
-}
-```
+3. Your browser will open automatically at:
+   ```
+   http://localhost:8501
+   ```
+   Fill in a student's profile and submit to get a live prediction.
 
 ## Model Performance
 
@@ -169,5 +141,8 @@ Response:
 
 - The dataset is synthetic and contains a deterministic generation rule (see Key Findings) — results should not be interpreted as real-world placement predictions.
 - The model was trained with scikit-learn 1.9.0; a version mismatch warning may appear if loaded with a different scikit-learn version. Retraining with matching versions removes this.
-- No authentication, rate limiting, or database is implemented — this is a prediction service, not a production-ready application.
+- No authentication or database is implemented — this is a demo prediction app, not a production-ready application.
 
+## Team
+
+<!-- Add team member names here -->
