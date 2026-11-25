@@ -143,6 +143,4 @@ Open `ClassifyMyPlacement.ipynb` in VS Code (with the Jupyter extension) or Jupy
 - The model was trained with scikit-learn 1.9.0; a version mismatch warning may appear if loaded with a different scikit-learn version. Retraining with matching versions removes this.
 - No authentication or database is implemented — this is a demo prediction app, not a production-ready application.
 
-## Team
 
-<!-- Add team member names here -->
